@@ -36,6 +36,7 @@ const nameInput = document.querySelector(".popup__input_type_name");
 const descriptionInput = document.querySelector(
   ".popup__input_type_description",
 );
+const profileForm = document.querySelector("#edit-profile-form");
 
 function openModal(modal) {
   modal.classList.add("popup_is-opened");
@@ -45,17 +46,31 @@ function closeModal(modal) {
   modal.classList.remove("popup_is-opened");
 }
 
-editProfile.addEventListener("click", function () {
+function fillProfileForm() {
+  nameInput.value = profileName.textContent;
+  descriptionInput.value = profileDescription.textContent;
+}
+
+function handleOpenEditModal() {
+  fillProfileForm();
   openModal(modal);
+}
+
+editProfile.addEventListener("click", function () {
+  handleOpenEditModal();
 });
 
 closeButton.addEventListener("click", function () {
   closeModal(modal);
 });
 
-function fillProfileForm() {
-  nameInput.value = profileName.textContent;
-  descriptionInput.value = profileDescription.textContent;
+function handleProfileFormSubmit(evt) {
+  evt.preventDefault();
+  profileName.textContent = nameInput.value;
+  profileDescription.textContent = descriptionInput.value;
+  closeModal(modal);
 }
 
-fillProfileForm();
+profileForm.addEventListener("submit", function (event) {
+  handleProfileFormSubmit(event);
+});
