@@ -1,4 +1,3 @@
-console.log("GISELLE estuvo aqui");
 const initialCards = [
   {
     name: "Valle de Yosemite",
@@ -27,3 +26,23 @@ const initialCards = [
 ];
 
 initialCards.forEach((card) => console.log(card.name));
+
+const editProfile = document.querySelector(".profile__edit-button");
+const modal = document.querySelector("#edit-popup");
+const closeButton = modal.querySelector(".popup__close"); //botón de cierre
+
+function openModal(modal) {
+  modal.classList.add("popup_is-opened");
+}
+
+function closeModal(modal) {
+  modal.classList.remove("popup_is-opened");
+}
+
+editProfile.addEventListener("click", function () {
+  openModal(modal);
+});
+
+closeButton.addEventListener("click", function () {
+  closeModal(modal);
+});
