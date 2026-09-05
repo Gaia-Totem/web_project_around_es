@@ -74,3 +74,14 @@ function handleProfileFormSubmit(evt) {
 profileForm.addEventListener("submit", function (event) {
   handleProfileFormSubmit(event);
 });
+const cardTemplate = document.querySelector("#card-template");
+
+function getCardElement(name, link) {
+  const cardElement = cardTemplate.content.cloneNode(true);
+  const cardImage = cardElement.querySelector(".card__image");
+  const cardTitle = cardElement.querySelector(".card__title");
+  cardImage.src = link;
+  cardImage.alt = name;
+  cardTitle.textContent = name;
+  return cardElement;
+}
