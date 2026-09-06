@@ -84,6 +84,7 @@ function getCardElement(
   const cardImage = cardElement.querySelector(".card__image");
   const cardTitle = cardElement.querySelector(".card__title");
   const cardLikeBtn = cardElement.querySelector(".card__like-button"); //♥
+
   cardImage.src = link;
   cardImage.alt = name;
   cardTitle.textContent = name;
@@ -91,6 +92,12 @@ function getCardElement(
   cardLikeBtn.addEventListener("click", function handler() {
     cardLikeBtn.classList.toggle("card__like-button_is-active");
     console.log("like button clicked"); //♥
+  });
+  //etapa 3 eliminar la tarjeta 🗑️
+  const cardDeleteBtn = cardElement.querySelector(".card__delete-button");
+  cardDeleteBtn.addEventListener("click", function () {
+    const card = cardDeleteBtn.closest(".card");
+    card.remove();
   });
   return cardElement;
 }
