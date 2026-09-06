@@ -89,10 +89,26 @@ function getCardElement(
   return cardElement;
 }
 const containerCards = document.querySelector(".cards__list");
+
 function renderCard(name, link, containerCards) {
   const newCard = getCardElement(name, link);
   containerCards.append(newCard);
 }
 initialCards.forEach((card) => {
   renderCard(card.name, card.link, containerCards);
+});
+//entra la segunda etapa
+//function handleCardFormSubmit() {}
+const ButtonAddCard = document.querySelector(".profile__add-button"); // botón +
+const newCardModal = document.querySelector("#new-card-popup"); // ventana emergente
+const CloseButtonAddCard = newCardModal.querySelector(".popup__close"); //boton x cerrar
+const formNewCard = document.querySelector("#new-card-form"); // formulario
+const cardNameInput = document.querySelector(".popup__input_type_card-name"); //input del título
+const cardLinkInput = document.querySelector(".popup__input_type_url"); //input del enlace
+
+ButtonAddCard.addEventListener("click", function () {
+  openModal(newCardModal);
+});
+CloseButtonAddCard.addEventListener("click", function () {
+  closeModal(newCardModal);
 });
