@@ -74,7 +74,7 @@ function handleProfileFormSubmit(evt) {
 profileForm.addEventListener("submit", function (event) {
   handleProfileFormSubmit(event);
 });
-const cardTemplate = document.querySelector("#card-template"); //preguntar si necesito agregar aquí  .content
+const cardTemplate = document.querySelector("#card_template"); //preguntar si necesito agregar aquí  .content
 
 function getCardElement(
   name = "Sin título",
@@ -88,3 +88,11 @@ function getCardElement(
   cardTitle.textContent = name;
   return cardElement;
 }
+const containerCards = document.querySelector(".cards__list");
+function renderCard(name, link, containerCards) {
+  const newCard = getCardElement(name, link);
+  containerCards.append(newCard);
+}
+initialCards.forEach((card) => {
+  renderCard(card.name, card.link, containerCards);
+});
