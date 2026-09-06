@@ -83,9 +83,15 @@ function getCardElement(
   const cardElement = cardTemplate.content.cloneNode(true);
   const cardImage = cardElement.querySelector(".card__image");
   const cardTitle = cardElement.querySelector(".card__title");
+  const cardLikeBtn = cardElement.querySelector(".card__like-button"); //♥
   cardImage.src = link;
   cardImage.alt = name;
   cardTitle.textContent = name;
+  //etapa 3 darle me gusta ♥ a las tarjetas
+  cardLikeBtn.addEventListener("click", function handler() {
+    cardLikeBtn.classList.toggle("card__like-button_is-active");
+    console.log("like button clicked"); //♥
+  });
   return cardElement;
 }
 const containerCards = document.querySelector(".cards__list");
@@ -98,7 +104,6 @@ initialCards.forEach((card) => {
   renderCard(card.name, card.link, containerCards);
 });
 //entra la segunda etapa
-//function handleCardFormSubmit() {}
 const ButtonAddCard = document.querySelector(".profile__add-button"); // botón +
 const newCardModal = document.querySelector("#new-card-popup"); // ventana emergente
 const CloseButtonAddCard = newCardModal.querySelector(".popup__close"); //boton x cerrar
@@ -111,4 +116,17 @@ ButtonAddCard.addEventListener("click", function () {
 });
 CloseButtonAddCard.addEventListener("click", function () {
   closeModal(newCardModal);
+});
+function handleCardFormSubmit(evt) {
+  evt.preventDefault();
+  const name = cardNameInput.value;
+  const link = cardLinkInput.value;
+  const newCard = getCardElement(name, link);
+  containerCards.prepend(newCard);
+  closeModal(newCardModal);
+  formNewCard.reset();
+}
+
+formNewCard.addEventListener("submit", function (event) {
+  handleCardFormSubmit(event);
 });
