@@ -74,7 +74,13 @@ function handleProfileFormSubmit(evt) {
 profileForm.addEventListener("submit", function (event) {
   handleProfileFormSubmit(event);
 });
-const cardTemplate = document.querySelector("#card_template"); //preguntar si necesito agregar aquí  .content
+//preguntar si necesito agregar aquí  .content
+const cardTemplate = document.querySelector("#card_template");
+//etapa 5 imagen grande en ventana emergente
+const imagePopup = document.querySelector("#image-popup");
+const imagePopupImage = imagePopup.querySelector(".popup__image");
+const imagePopupCaption = imagePopup.querySelector(".popup__caption");
+const imagePopupClose = imagePopup.querySelector(".popup__close"); //etapa 5
 
 function getCardElement(
   name = "Sin título",
@@ -88,6 +94,14 @@ function getCardElement(
   cardImage.src = link;
   cardImage.alt = name;
   cardTitle.textContent = name;
+  //etapa 5
+  cardImage.addEventListener("click", function () {
+    imagePopupImage.src = link;
+    imagePopupImage.alt = name;
+    imagePopupCaption.textContent = name;
+    openModal(imagePopup);
+  });
+
   //etapa 3 darle me gusta ♥ a las tarjetas
   cardLikeBtn.addEventListener("click", function handler() {
     cardLikeBtn.classList.toggle("card__like-button_is-active");
@@ -101,6 +115,10 @@ function getCardElement(
   });
   return cardElement;
 }
+//etapa 5 cerrar imagen grande
+imagePopupClose.addEventListener("click", function () {
+  closeModal(imagePopup);
+});
 const containerCards = document.querySelector(".cards__list");
 
 function renderCard(name, link, containerCards) {
