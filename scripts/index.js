@@ -1,3 +1,4 @@
+import { toggleButtonState, setEventListeners } from "./validate.js";
 const initialCards = [
   {
     name: "Valle de Yosemite",
@@ -40,37 +41,6 @@ const profileForm = document.querySelector("#edit-profile-form");
 const profileInputs = profileForm.querySelectorAll(".popup__input");
 const submitButton = profileForm.querySelector(".popup__button");
 
-function showInputError(input) {
-  const errorElement = input.nextElementSibling;
-
-  errorElement.textContent = input.validationMessage;
-}
-function hideInputError(input) {
-  const errorElement = input.nextElementSibling;
-
-  errorElement.textContent = "";
-}
-function checkInputValidity(input) {
-  if (!input.validity.valid) {
-    showInputError(input);
-  } else {
-    hideInputError(input);
-  }
-}
-function toggleButtonState() {
-  const allValid = Array.from(profileInputs).every(
-    (input) => input.validity.valid,
-  );
-
-  submitButton.disabled = !allValid;
-}
-profileInputs.forEach((input) => {
-  input.addEventListener("input", () => {
-    checkInputValidity(input);
-    toggleButtonState();
-  });
-});
-
 function openModal(modal) {
   modal.classList.add("popup_is-opened");
 }
@@ -102,7 +72,7 @@ function fillProfileForm() {
 
 function handleOpenEditModal() {
   fillProfileForm();
-  toggleButtonState();
+  toggleButtonState(profileInputs, submitButton);
   openModal(modal);
 }
 
@@ -187,26 +157,14 @@ const cardNameInput = document.querySelector(".popup__input_type_card-name"); //
 const cardLinkInput = document.querySelector(".popup__input_type_url"); //input del enlace
 const newCardInputs = formNewCard.querySelectorAll(".popup__input");
 const newCardSubmitButton = formNewCard.querySelector(".popup__button");
+setEventListeners(profileInputs, submitButton);
+setEventListeners(newCardInputs, newCardSubmitButton);
 modal.addEventListener("mousedown", handleOverlayClick);
 newCardModal.addEventListener("mousedown", handleOverlayClick);
 imagePopup.addEventListener("mousedown", handleOverlayClick);
-function toggleNewCardButtonState() {
-  const allValid = Array.from(newCardInputs).every(
-    (input) => input.validity.valid,
-  );
-
-  newCardSubmitButton.disabled = !allValid;
-}
-
-newCardInputs.forEach((input) => {
-  input.addEventListener("input", () => {
-    checkInputValidity(input);
-    toggleNewCardButtonState();
-  });
-});
 ButtonAddCard.addEventListener("click", function () {
   formNewCard.reset();
-  toggleNewCardButtonState();
+  toggleButtonState(newCardInputs, newCardSubmitButton);
   openModal(newCardModal);
 });
 CloseButtonAddCard.addEventListener("click", function () {
