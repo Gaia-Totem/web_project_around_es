@@ -37,6 +37,38 @@ const descriptionInput = document.querySelector(
   ".popup__input_type_description",
 );
 const profileForm = document.querySelector("#edit-profile-form");
+const profileInputs = profileForm.querySelectorAll(".popup__input");
+const submitButton = profileForm.querySelector(".popup__button");
+function showInputError(input) {
+  const errorElement = input.nextElementSibling;
+
+  errorElement.textContent = input.validationMessage;
+}
+function hideInputError(input) {
+  const errorElement = input.nextElementSibling;
+
+  errorElement.textContent = "";
+}
+function checkInputValidity(input) {
+  if (!input.validity.valid) {
+    showInputError(input);
+  } else {
+    hideInputError(input);
+  }
+}
+function toggleButtonState() {
+  const allValid = Array.from(profileInputs).every(
+    (input) => input.validity.valid,
+  );
+
+  submitButton.disabled = !allValid;
+}
+profileInputs.forEach((input) => {
+  input.addEventListener("input", () => {
+    checkInputValidity(input);
+    toggleButtonState();
+  });
+});
 
 function openModal(modal) {
   modal.classList.add("popup_is-opened");
@@ -53,6 +85,7 @@ function fillProfileForm() {
 
 function handleOpenEditModal() {
   fillProfileForm();
+  toggleButtonState();
   openModal(modal);
 }
 
