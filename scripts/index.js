@@ -39,6 +39,7 @@ const descriptionInput = document.querySelector(
 const profileForm = document.querySelector("#edit-profile-form");
 const profileInputs = profileForm.querySelectorAll(".popup__input");
 const submitButton = profileForm.querySelector(".popup__button");
+
 function showInputError(input) {
   const errorElement = input.nextElementSibling;
 
@@ -168,8 +169,24 @@ const CloseButtonAddCard = newCardModal.querySelector(".popup__close"); //boton 
 const formNewCard = document.querySelector("#new-card-form"); // formulario
 const cardNameInput = document.querySelector(".popup__input_type_card-name"); //input del título
 const cardLinkInput = document.querySelector(".popup__input_type_url"); //input del enlace
+const newCardInputs = formNewCard.querySelectorAll(".popup__input");
+const newCardSubmitButton = formNewCard.querySelector(".popup__button");
+function toggleNewCardButtonState() {
+  const allValid = Array.from(newCardInputs).every(
+    (input) => input.validity.valid,
+  );
 
+  newCardSubmitButton.disabled = !allValid;
+}
+newCardInputs.forEach((input) => {
+  input.addEventListener("input", () => {
+    checkInputValidity(input);
+    toggleNewCardButtonState();
+  });
+});
 ButtonAddCard.addEventListener("click", function () {
+  formNewCard.reset();
+  toggleNewCardButtonState();
   openModal(newCardModal);
 });
 CloseButtonAddCard.addEventListener("click", function () {
