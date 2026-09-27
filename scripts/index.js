@@ -78,6 +78,11 @@ function openModal(modal) {
 function closeModal(modal) {
   modal.classList.remove("popup_is-opened");
 }
+function handleOverlayClick(event) {
+  if (event.target === event.currentTarget) {
+    closeModal(event.currentTarget);
+  }
+}
 
 function fillProfileForm() {
   nameInput.value = profileName.textContent;
@@ -171,6 +176,9 @@ const cardNameInput = document.querySelector(".popup__input_type_card-name"); //
 const cardLinkInput = document.querySelector(".popup__input_type_url"); //input del enlace
 const newCardInputs = formNewCard.querySelectorAll(".popup__input");
 const newCardSubmitButton = formNewCard.querySelector(".popup__button");
+modal.addEventListener("mousedown", handleOverlayClick);
+newCardModal.addEventListener("mousedown", handleOverlayClick);
+imagePopup.addEventListener("mousedown", handleOverlayClick);
 function toggleNewCardButtonState() {
   const allValid = Array.from(newCardInputs).every(
     (input) => input.validity.valid,
@@ -178,6 +186,7 @@ function toggleNewCardButtonState() {
 
   newCardSubmitButton.disabled = !allValid;
 }
+
 newCardInputs.forEach((input) => {
   input.addEventListener("input", () => {
     checkInputValidity(input);
