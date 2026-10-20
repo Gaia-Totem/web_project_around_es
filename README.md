@@ -41,3 +41,5 @@ Las clases se organizan en archivos TypeScript independientes para mantener el c
 - `PopupWithForm.ts`: administra las ventanas emergentes que contienen formularios.
 - `UserInfo.ts`: obtiene y actualiza la información del perfil del usuario.
 - `index.ts`: importa las clases, crea sus instancias y configura los detectores de eventos necesarios.
+
+2026, Gaia-Totem
