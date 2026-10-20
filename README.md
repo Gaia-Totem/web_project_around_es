@@ -1,30 +1,43 @@
 # Tripleten web_project_around_es
 
-En este proyecto se implementó la validación de los formularios «Editar perfil» y «Nuevo lugar», utilizando los mensajes de error predeterminados del navegador.
-Validación de formularios
+SPRINT 8
+El proyecto "Around The U.S." es una página web interactiva que permite visualizar tarjetas con fotografías y descripciones de diferentes lugares.
 
-En el formulario «Editar perfil»:
+El proyecto "Around The U.S." aplica el principio de **encapsulamiento** de la programación orientada a objetos (POO) con TypeScript para organizar el código en clases independientes y reutilizables.. Cada clase tiene una responsabilidad específica y administra los datos y comportamientos que le corresponden.
 
-El campo «Nombre» es obligatorio y debe tener entre 2 y 40 caracteres.
-El campo «Acerca de» es obligatorio y debe tener entre 2 y 200 caracteres.
-El botón «Guardar» permanece desactivado mientras exista algún campo inválido.
+Las clases se exportan desde sus respectivos archivos mediante `export` y se importan en `index.ts` mediante `import`, lo que permite separar las responsabilidades y facilitar el mantenimiento del código.
 
-En el formulario «Nuevo lugar»:
+El archivo `index.ts` se mantiene como punto de entrada de la aplicación y contiene únicamente la inicialización de las clases y la configuración de los detectores de eventos específicos.
 
-El campo «Título» es obligatorio y debe tener entre 2 y 30 caracteres.
-El campo «URL de la imagen» es obligatorio y debe contener una URL válida.
-El botón «Guardar» se activa únicamente cuando todos los campos son válidos.
+Funcionalidades
 
-Los errores de validación se muestran debajo de los campos correspondientes.
+- Visualización de tarjetas con imágenes y nombres de lugares.
+- Apertura de imágenes en ventanas emergentes (popups).
+- Formularios para editar la información del usuario y agregar tarjetas.
+- Validación de formularios para comprobar que los datos introducidos sean correctos.
+- Organización y renderizado dinámico de elementos en la página.
+- Gestión de la información del perfil del usuario.
 
-Comportamiento de las ventanas emergentes
+Tecnologías y técnicas utilizadas en este sprint 8
 
-Se implementó el cierre de las ventanas emergentes mediante:
+- HTML5: estructura y contenido de la página.
+- CSS:diseño, estilos y adaptación a diferentes tamaños de pantalla.
+- TypeScript: desarrollo de la lógica de la aplicación con tipado estático.
+- JavaScript: conceptos de programación y manipulación del DOM mediante TypeScript.
+- **Programación orientada a objetos (POO):** organización del código mediante clases, encapsulamiento, métodos y propiedades.
+- Módulos de TypeScript: separación del código en archivos independientes mediante `export` e `import`.
+- Validación de formularios: comprobación de los datos introducidos por el usuario.
+- Manipulación del DOM: creación, actualización y eliminación de elementos de la página.
+- Eventos: interacción con botones, formularios e imágenes.
 
-Clic en la superposición, fuera de los límites del popup.
-Presionar la tecla Esc.
-Organización del código
+Estructura del proyecto:
+Las clases se organizan en archivos TypeScript independientes para mantener el código modular, reutilizable y fácil de mantener.
 
-La lógica de validación se separó en el archivo validate.js y se conectó mediante JavaScript modular. Se creó la función setEventListeners() para organizar los eventos de los formularios.
-
-Se procuró que cada función tuviera una única responsabilidad, manteniendo el código organizado y fácil de mantener.
+- `FormValidator.ts`: valida los campos de los formularios y gestiona sus mensajes de error.
+- `Card.ts`: crea y administra las tarjetas de lugares.
+- `Section.ts`: organiza y renderiza elementos dentro de una sección de la página.
+- `Popup.ts`: administra la apertura y el cierre de ventanas emergentes.
+- `PopupWithImage.ts`: muestra imágenes ampliadas en una ventana emergente.
+- `PopupWithForm.ts`: administra las ventanas emergentes que contienen formularios.
+- `UserInfo.ts`: obtiene y actualiza la información del perfil del usuario.
+- `index.ts`: importa las clases, crea sus instancias y configura los detectores de eventos necesarios.
