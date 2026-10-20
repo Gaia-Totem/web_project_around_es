@@ -1,3 +1,4 @@
+/* valida los campos y habilita o deshabilita los botones. */
 export class FormValidator {
     constructor(config, formElement) {
         this._config = config;

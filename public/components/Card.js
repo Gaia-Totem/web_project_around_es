@@ -1,3 +1,4 @@
+/*Crea las tarjetas y configura los botones de «Me gusta», eliminar y abrir imagen. */
 export class Card {
     constructor(data, selector, handleCardClick) {
         this._data = data;
