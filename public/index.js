@@ -67,28 +67,60 @@ newCardValidator.enableValidation();
 // -Popup para editar el perfil.
 const profilePopup = new PopupWithForm((inputValues) => {
     var _a, _b;
+    const submitButton = document.querySelector("#edit-profile-form .popup__button");
+    const originalButtonText = submitButton === null || submitButton === void 0 ? void 0 : submitButton.textContent;
+    if (submitButton) {
+        submitButton.textContent = "Guardando...";
+        submitButton.disabled = true;
+    }
     const userData = {
         name: (_a = inputValues.name) !== null && _a !== void 0 ? _a : "",
         about: (_b = inputValues.description) !== null && _b !== void 0 ? _b : "",
     };
-    api.updateUserInfo(userData)
+    // Función para restaurar el botón
+    const restoreButton = () => {
+        if (submitButton) {
+            submitButton.textContent = originalButtonText !== null && originalButtonText !== void 0 ? originalButtonText : "Guardar";
+            submitButton.disabled = false;
+        }
+    };
+    api
+        .updateUserInfo(userData)
         .then((user) => {
         userInfo.setUserInfo({
             name: user.name,
             about: user.about,
             avatar: user.avatar,
         });
-        profilePopup.close();
+        setTimeout(() => {
+            profilePopup.close();
+            restoreButton();
+        }, 800);
     })
         .catch((err) => {
         console.error("Error al actualizar el perfil:", err);
+        restoreButton();
     });
 }, "#edit-popup");
 profilePopup.setEventListeners();
 // -Popup para editar el  avatar o foto de perfil.
 const popupWithAvatar = new PopupWithForm((inputValues) => {
     var _a;
+    const submitButton = document.querySelector("#avatar-popup .popup__button");
+    const originalButtonText = submitButton === null || submitButton === void 0 ? void 0 : submitButton.textContent;
+    // Activa el estado de carga.
+    if (submitButton) {
+        submitButton.textContent = "Guardando...";
+        submitButton.disabled = true;
+    }
     const avatar = (_a = inputValues.avatar) !== null && _a !== void 0 ? _a : "";
+    // Función para restaurar el botón.
+    const restoreButton = () => {
+        if (submitButton) {
+            submitButton.textContent = originalButtonText !== null && originalButtonText !== void 0 ? originalButtonText : "Guardar";
+            submitButton.disabled = false;
+        }
+    };
     api.updateAvatar(avatar)
         .then((user) => {
         userInfo.setUserInfo({
@@ -96,35 +128,57 @@ const popupWithAvatar = new PopupWithForm((inputValues) => {
             about: user.about,
             avatar: user.avatar,
         });
-        popupWithAvatar.close();
+        setTimeout(() => {
+            popupWithAvatar.close();
+            restoreButton();
+        }, 1000);
     })
         .catch((err) => {
         console.error("Error al actualizar el avatar:", err);
+        restoreButton();
     });
 }, "#avatar-popup");
 popupWithAvatar.setEventListeners();
 // -Popup para agregar tarjetas.
 const newCardPopup = new PopupWithForm((inputValues) => {
     var _a, _b;
-    // -Crea los datos que enviaremos al servidor
+    const submitButton = document.querySelector("#new-card-popup .popup__button");
+    const originalButtonText = submitButton === null || submitButton === void 0 ? void 0 : submitButton.textContent;
+    // Activa el estado de carga.
+    if (submitButton) {
+        submitButton.textContent = "Guardando...";
+        submitButton.disabled = true;
+    }
+    // Crea los datos que enviaremos al servidor.
     const cardData = {
         name: (_a = inputValues["place-name"]) !== null && _a !== void 0 ? _a : "",
         link: (_b = inputValues.link) !== null && _b !== void 0 ? _b : "",
     };
+    // Función para restaurar el botón.
+    const restoreButton = () => {
+        if (submitButton) {
+            submitButton.textContent = originalButtonText !== null && originalButtonText !== void 0 ? originalButtonText : "Guardar";
+            submitButton.disabled = false;
+        }
+    };
     api.addCard(cardData)
         .then((newCardData) => {
-        // -Crea la tarjeta con los datos recibidos.
+        // Crea la tarjeta con los datos recibidos.
         const card = new Card(newCardData, "#card_template", (name, link) => {
             imagePopup.open(link, name);
         }, handleLikeClick, handleDeleteClick);
-        // -Agrega la tarjeta a la sección.
+        // Agrega la tarjeta a la sección.
         if (cardSection) {
             cardSection.addItem(card.generateCard());
-            newCardPopup.close();
         }
+        setTimeout(() => {
+            newCardPopup.close();
+            restoreButton();
+        }, 700);
     })
         .catch((err) => {
         console.error("Error al agregar la tarjeta:", err);
+        restoreButton();
     });
 }, "#new-card-popup");
 newCardPopup.setEventListeners();
