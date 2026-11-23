@@ -188,3 +188,18 @@
 #avatar-popup .popup__button {
   margin-top: 50px;
 }
+
+.popup_type_confirmation .popup__content {
+  max-width: 350px;
+  min-height: auto;
+  padding: 25px 30px;
+}
+
+.popup_type_confirmation .popup__title {
+  font-size: 20px;
+  line-height: 26px;
+}
+
+.popup_type_confirmation .popup__button {
+  margin-top: 25px;
+}
