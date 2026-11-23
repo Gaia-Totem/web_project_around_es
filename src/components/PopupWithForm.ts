@@ -25,6 +25,7 @@ export class PopupWithForm extends Popup {
     this._handleFormSubmit = handleFormSubmit;
   }
 
+  
   private getInputValues(): Record<string, string> {
     const inputList =
       this._form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(

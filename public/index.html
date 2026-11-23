@@ -18,15 +18,27 @@
       </header>
       <main class="content">
         <section class="profile page__section">
-          <img class="profile__image" src="./images/avatar.jpg" alt="Avatar" />
+          <div class="profile__image-container">
+            <!--se cambia la estructura del img para agregar un botón <img class="profile__image" src="./images/avatar.jpg" alt="Avatar" /> por: -->
+            <img
+              class="profile__image"
+              src="./images/avatar.jpg"
+              alt="Avatar"
+            />
+            <button
+              class="profile__image-edit"
+              type="button"
+              aria-label="Cambiar foto de perfil"
+            ></button>
+          </div>
           <div class="profile__info">
-            <h1 class="profile__title">Jacques Cousteau</h1>
+            <h1 class="profile__title"></h1>
             <button
               aria-label="Editar perfil"
               class="profile__edit-button"
               type="button"
             ></button>
-            <p class="profile__description">Explorador</p>
+            <p class="profile__description"></p>
           </div>
           <button
             aria-label="Agregar tarjeta"
@@ -59,7 +71,7 @@
         </template>
       </main>
       <footer class="footer page__section">
-        <p class="footer__copyright">© 2025 Around The U.S.</p>
+        <p class="footer__copyright">© Norma Giselle, 2026. Around The U.S.</p>
       </footer>
       <div class="popup" id="edit-popup">
         <div class="popup__content">
@@ -79,9 +91,7 @@
               minlength="2"
               maxlength="40"
             />
-
             <span class="popup__input-error"></span>
-
             <input
               class="popup__input popup__input_type_description"
               name="description"
@@ -91,13 +101,33 @@
               minlength="2"
               maxlength="200"
             />
-
             <span class="popup__input-error"></span>
             <button class="button popup__button" type="submit">Guardar</button>
           </form>
         </div>
       </div>
-      <!--etapa 2 crear tarjetas-->
+      <!-- se agrega el Popup para cambiar el avatar o foto de perfil-->
+      <div class="popup" id="avatar-popup">
+        <div class="popup__content">
+          <button
+            aria-label="Cerrar ventana emergente"
+            class="popup__close"
+            type="button"
+          ></button>
+          <h3 class="popup__title">Cambiar foto de perfil</h3>
+          <form class="popup__form" id="avatar-form">
+            <input
+              class="popup__input popup__input_type_url"
+              name="avatar"
+              placeholder="Enlace a la imagen"
+              type="url"
+              required
+            />
+            <span class="popup__input-error"></span>
+            <button class="button popup__button" type="submit">Guardar</button>
+          </form>
+        </div>
+      </div>
       <div class="popup" id="new-card-popup">
         <div class="popup__content">
           <button
@@ -138,6 +168,22 @@
           ></button>
           <img alt="" class="popup__image" src="#" />
           <p class="popup__caption"></p>
+        </div>
+      </div>
+      <!-- Popup de confirmación para eliminar tarjetas -->
+      <div class="popup popup_type_confirmation">
+        <div class="popup__content">
+          <button
+            aria-label="Cerrar ventana emergente"
+            class="popup__close"
+            type="button"
+          ></button>
+
+          <h3 class="popup__title">¿Estás seguro?</h3>
+
+          <form class="popup__form">
+            <button class="button popup__button" type="submit">Sí</button>
+          </form>
         </div>
       </div>
     </div>

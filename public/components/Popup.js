@@ -1,7 +1,8 @@
 /* Abrir, cerrar y eventos comunes */
 export class Popup {
     constructor(selector) {
-        /*handleEscClose(): comprueba si se pulsó Escape. Está escrita como una función flecha para conservar el valor de this. */
+        // handleEscClose(): comprueba si se pulsó Escape y cierra. 
+        /*Está escrita como una función flecha para conservar el valor de this. */
         this.handleEscClose = (event) => {
             if (event.key === "Escape") {
                 this.close();
@@ -13,11 +14,11 @@ export class Popup {
         }
         this._popup = popupElement;
     }
-    /*open():añade la clase CSS que muestra la ventana. */
+    //-Añade la clase CSS que muestra la ventana.
     open() {
         this._popup.classList.add("popup_is-opened");
     }
-    /*close(): elimina esa clase y la oculta.*/
+    //-Elimina esa clase y la oculta.
     close() {
         this._popup.classList.remove("popup_is-opened");
     }

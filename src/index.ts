@@ -1,73 +1,70 @@
 
-import { Card, type CardData } from "./components/Card.js";
+import { Card, type CardData, type NewCardData } from "./components/Card.js";
 import { FormValidator } from "./components/FormValidator.js";
 import { PopupWithForm } from "./components/PopupWithForm.js";
 import { PopupWithImage } from "./components/PopupWithImage.js";
 import { Section } from "./components/Section.js";
 import { UserInfo } from "./components/UserInfo.js";
 import { defaultFormConfig } from "./utils/constants.js";
+import { Api } from "./components/Api.js";
+import { PopupWithConfirmation } from "./components/PopupWithConfirmation.js";
 
-// Datos iniciales de las tarjetas
-const initialCards: CardData[] = [
-  {
-    name: "Valle de Yosemite",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_yosemite.jpg",
+// -Crea el objeto API
+const api = new Api({
+  baseUrl: "https://around-api.es.tripleten-services.com/v1",
+  headers: {
+    authorization: "b54fad1a-e4e3-4a3d-94b8-6640e2531bef",
+    "Content-Type": "application/json",
   },
-  {
-    name: "Lago Louise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lake-louise.jpg",
-  },
-  {
-    name: "Montañas Calvas",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_bald-mountains.jpg",
-  },
-  {
-    name: "Latemar",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_latemar.jpg",
-  },
-  {
-    name: "Parque Nacional de la Vanoise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_vanoise.jpg",
-  },
-  {
-    name: "Lago di Braies",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lago.jpg",
-  },
-];
+});
+// -Declara la sección de tarjetas
+let cardSection: Section<CardData> | null = null; //Guarda la sección donde se muestran las tarjetas
 
-// Información del perfil
+// -Gestiona los Me gusta de las tarjetas.
+const handleLikeClick = (
+  cardId: string,
+  isLiked: boolean
+): Promise<void> => {
+  return api.changeLikeCardStatus(cardId, isLiked).then(() => {});
+};
+
+// -Información del perfil
 const userInfo = new UserInfo({
   nameSelector: ".profile__title",
-  jobSelector: ".profile__description",
+  aboutSelector: ".profile__description",
+  avatarSelector: ".profile__image",
 });
 
-// Popup para mostrar imágenes grandes
+// -Popup de imágenes
 const imagePopup = new PopupWithImage("#image-popup");
 imagePopup.setEventListeners();
 
-// Sección donde se mostrarán las tarjetas
-const cardSection = new Section<CardData>(
-  {
-    items: initialCards,
-    renderer: (item) => {
-      const card = new Card(
-        item,
-        "#card_template",
-        (name, link) => {
-          imagePopup.open(link, name);
-        }
-      );
+// -selectedCard Guarda la tarjeta que queremos eliminar.
+let selectedCard: Card | null = null; 
 
-      cardSection.addItem(card.generateCard());
-    },
+// - Crea la ventana de confirmación 
+// define qué sucede después de confirmar o cancelar la eliminación de la tarjeta. 
+const popupWithConfirmation = new PopupWithConfirmation(
+  (cardId) => {
+    return api.deleteCard(cardId) //cuando confirmamos, solicita eliminarla del servidor.
+      .then(() => { //si tiene éxito, también la elimina de la página.
+         selectedCard?.deleteCard();
+        selectedCard = null; //el null Limpia la referencia a la tarjeta que acabamos de eliminar.
+      })
+      .catch((err) => {
+        console.error("Error al eliminar la tarjeta:", err);
+      });
   },
-  ".cards__list"
+  ".popup_type_confirmation"
 );
+popupWithConfirmation.setEventListeners();
 
-// Crear y mostrar las tarjetas iniciales
-cardSection.renderItems();
+// -Guarda la tarjeta que queremos eliminar y abre el popup de confirmación.
+const handleDeleteClick = (card: Card, cardId: string): void => {
+  selectedCard = card; //Guarda aquí el objeto de la tarjeta que el usuario quiere eliminar.
+  popupWithConfirmation.openWithCardId(cardId);
+};
 
-// Validación del formulario de perfil
 const profileFormElement =
   document.querySelector<HTMLFormElement>("#edit-profile-form");
 
@@ -75,14 +72,14 @@ if (!profileFormElement) {
   throw new Error("No se encontró el formulario del perfil");
 }
 
+// - Validación del formulario de perfil.
 const profileValidator = new FormValidator(
   defaultFormConfig,
   profileFormElement
 );
-
 profileValidator.enableValidation();
 
-// Validación del formulario de nuevas tarjetas
+// 6. Validación del formulario de nuevas tarjetas.
 const newCardFormElement =
   document.querySelector<HTMLFormElement>("#new-card-form");
 
@@ -94,51 +91,140 @@ const newCardValidator = new FormValidator(
   defaultFormConfig,
   newCardFormElement
 );
-
 newCardValidator.enableValidation();
 
-// Popup para editar el perfil
-let profilePopup: PopupWithForm;
-
-profilePopup = new PopupWithForm(
+// -Popup para editar el perfil.
+const profilePopup = new PopupWithForm(
   (inputValues) => {
-    userInfo.setUserInfo({
+    const userData = {
       name: inputValues.name ?? "",
-      job: inputValues.description ?? "",
-    });
+      about: inputValues.description ?? "",
+    };
 
-    profilePopup.close();
+    api.updateUserInfo(userData)
+      .then((user) => {
+        userInfo.setUserInfo({
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+        });
+
+        profilePopup.close();
+      })
+      
+      .catch((err) => {
+        console.error("Error al actualizar el perfil:", err);
+      });
   },
   "#edit-popup"
 );
-
 profilePopup.setEventListeners();
 
-// Popup para agregar tarjetas
+// -Popup para editar el  avatar o foto de perfil.
+const popupWithAvatar = new PopupWithForm(
+  (inputValues) => {
+    const avatar = inputValues.avatar ?? "";
+
+    api.updateAvatar(avatar)
+      .then((user) => {
+        userInfo.setUserInfo({
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+        });
+
+        popupWithAvatar.close();
+      })
+      .catch((err) => {
+        console.error("Error al actualizar el avatar:", err);
+      });
+  },
+  "#avatar-popup"
+);
+
+popupWithAvatar.setEventListeners();
+
+// -Popup para agregar tarjetas.
 const newCardPopup = new PopupWithForm(
   (inputValues) => {
-    const cardData: CardData = {
+    // -Crea los datos que enviaremos al servidor
+    const cardData: NewCardData = {
       name: inputValues["place-name"] ?? "",
       link: inputValues.link ?? "",
     };
+  
+    api.addCard(cardData)
+      .then((newCardData) => {
 
-    const card = new Card(
-      cardData,
-      "#card_template",
-      (name, link) => {
-        imagePopup.open(link, name);
-      }
-    );
+        // -Crea la tarjeta con los datos recibidos.
+        const card = new Card(
+          newCardData,
+          "#card_template",
+          (name, link) => {
+            imagePopup.open(link, name);
+          },
+          handleLikeClick,
+          handleDeleteClick,
+        );
 
-    cardSection.addItem(card.generateCard());
-    newCardPopup.close();
+        // -Agrega la tarjeta a la sección.
+        if (cardSection) {
+          cardSection.addItem(card.generateCard());
+          newCardPopup.close();
+        }
+      })
+      .catch((err) => {
+        console.error("Error al agregar la tarjeta:", err);
+      });
   },
   "#new-card-popup"
 );
 
 newCardPopup.setEventListeners();
 
-// Botón para editar el perfil
+// -Obtiene los datos del servidor.
+Promise.all([
+  api.getUserInfo(),
+  api.getInitialCards(),
+])
+  .then(([user, cards]) => {
+  console.log("Tarjetas recibidas del servidor:", cards);
+    // -Muestra información del usuario.
+    userInfo.setUserInfo({
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+    });
+
+    // Crea la sección de tarjetas.
+    cardSection = new Section<CardData>(
+      {
+        items: cards,
+        renderer: (item) => {
+          const card = new Card(
+            item,
+            "#card_template",
+            (name, link) => {
+              imagePopup.open(link, name);
+            },
+            handleLikeClick,
+            handleDeleteClick,
+          );
+
+          cardSection!.addItem(card.generateCard());
+        },
+      },
+      ".cards__list"
+    );
+
+    // -Muestra todas las tarjetas.
+    cardSection.renderItems();
+  })
+  .catch((err) => {
+    console.error("Error al cargar los datos:", err);
+  });
+
+// -Botón para editar el perfil.
 const editButton =
   document.querySelector<HTMLButtonElement>(".profile__edit-button");
 
@@ -162,13 +248,22 @@ editButton.addEventListener("click", () => {
   const currentUser = userInfo.getUserInfo();
 
   nameInput.value = currentUser.name;
-  descriptionInput.value = currentUser.job;
+  descriptionInput.value = currentUser.about;
 
   profileValidator.resetValidation();
   profilePopup.open();
 });
 
-// Botón para agregar una tarjeta
+// -Botón para editar el avatar o foto de perfil. 
+const avatarEditButton = document.querySelector(
+  ".profile__image-edit"
+);
+
+avatarEditButton?.addEventListener("click", () => {
+  popupWithAvatar.open();
+});
+
+// -Botón para agregar tarjetas.
 const addCardButton =
   document.querySelector<HTMLButtonElement>(".profile__add-button");
 

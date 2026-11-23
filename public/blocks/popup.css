@@ -181,3 +181,10 @@
 .popup__input-error_active {
   visibility: visible;
 }
+#avatar-popup .popup__content {
+  min-height: auto;
+}
+
+#avatar-popup .popup__button {
+  margin-top: 50px;
+}
