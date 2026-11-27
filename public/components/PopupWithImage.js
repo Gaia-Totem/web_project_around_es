@@ -20,4 +20,3 @@ export class PopupWithImage extends Popup {
         super.open();
     }
 }
-//# sourceMappingURL=PopupWithImage.js.map

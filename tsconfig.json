@@ -1,19 +1,33 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
-
-    "module": "esnext",
-
+    // File Layout
     "rootDir": "./src",
-
     "outDir": "./public",
 
+    // Environment Settings
+    "module": "es6",
+    "target": "es2016",
+    "types": [],
+
+    // Allow JavaScript
     "allowJs": true,
 
+    // Other Outputs
+    // "sourceMap": true,
+    // "declaration": true,
+    // "declarationMap": true,
+
+    // Stricter Typechecking Options
+    "noUncheckedIndexedAccess": false,
+    "exactOptionalPropertyTypes": false,
+
+    // Recommended Options
     "strict": true,
-
-    "moduleResolution": "bundler",
-
-    "sourceMap": true
+    "jsx": "react-jsx",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true
   }
 }

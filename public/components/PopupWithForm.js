@@ -1,3 +1,12 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { Popup } from "./Popup.js";
 export class PopupWithForm extends Popup {
     constructor(handleFormSubmit, selector) {
@@ -18,15 +27,22 @@ export class PopupWithForm extends Popup {
         return values;
     }
     setEventListeners() {
-        super.setEventListeners();
-        this._form.addEventListener("submit", (event) => {
-            event.preventDefault();
-            this._handleFormSubmit(this.getInputValues());
+        const _super = Object.create(null, {
+            setEventListeners: { get: () => super.setEventListeners }
         });
+        super.setEventListeners();
+        this._form.addEventListener("submit", (event) => __awaiter(this, void 0, void 0, function* () {
+            event.preventDefault();
+            try {
+                yield this._handleFormSubmit(this.getInputValues());
+            }
+            catch (err) {
+                console.error("Error al procesar el formulario:", err);
+            }
+        }));
     }
     close() {
         this._form.reset();
         super.close();
     }
 }
-//# sourceMappingURL=PopupWithForm.js.map

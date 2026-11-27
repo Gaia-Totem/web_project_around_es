@@ -1,4 +1,13 @@
-//Crea las tarjetas.
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+// Crea las tarjetas.
 export class Card {
     constructor(data, selector, handleCardClick, handleLikeClick, handleDeleteClick) {
         this._data = data;
@@ -18,15 +27,10 @@ export class Card {
         this._setCardData();
         this._setEventListeners();
     }
-    /*_setCardData() tiene la responsabilidad de configurar los datos iniciales de la tarjeta.
-    Ahora hace tres cosas: */
     _setCardData() {
-        const titleElement = //1. Coloca el nombre de la tarjeta.
-         this._element.querySelector(".card__title");
-        const imageElement = //2. Coloca la imagen y su texto alternativo.
-         this._element.querySelector(".card__image");
-        const likeButton = //3. Configura el corazón según el valor inicial de isLiked.
-         this._element.querySelector(".card__like-button");
+        const titleElement = this._element.querySelector(".card__title");
+        const imageElement = this._element.querySelector(".card__image");
+        const likeButton = this._element.querySelector(".card__like-button");
         if (!titleElement || !imageElement) {
             throw new Error("Faltan elementos dentro de la tarjeta");
         }
@@ -42,17 +46,21 @@ export class Card {
         imageElement === null || imageElement === void 0 ? void 0 : imageElement.addEventListener("click", () => {
             this._handleCardClick(this._data.name, this._data.link);
         });
-        likeButton === null || likeButton === void 0 ? void 0 : likeButton.addEventListener("click", () => {
+        likeButton === null || likeButton === void 0 ? void 0 : likeButton.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
             const newIsLiked = !this._data.isLiked;
-            this._handleLikeClick(this._data._id, newIsLiked)
-                .then(() => {
+            likeButton.disabled = true;
+            try {
+                yield this._handleLikeClick(this._data._id, newIsLiked);
                 this._data.isLiked = newIsLiked;
                 likeButton.classList.toggle("card__like-button_is-active", newIsLiked);
-            })
-                .catch((err) => {
+            }
+            catch (err) {
                 console.error("Error al cambiar el like:", err);
-            });
-        });
+            }
+            finally {
+                likeButton.disabled = false;
+            }
+        }));
         deleteButton === null || deleteButton === void 0 ? void 0 : deleteButton.addEventListener("click", () => {
             this._handleDeleteClick(this, this._data._id);
         });
@@ -64,4 +72,3 @@ export class Card {
         this._element.remove();
     }
 }
-//# sourceMappingURL=Card.js.map

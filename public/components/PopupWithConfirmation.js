@@ -33,4 +33,3 @@ export class PopupWithConfirmation extends Popup {
         });
     }
 }
-//# sourceMappingURL=PopupWithConfirmation.js.map

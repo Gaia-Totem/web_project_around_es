@@ -1,3 +1,4 @@
+import { defaultFormConfig } from "../utils/constants";
 /* valida los campos y habilita o deshabilita los botones. */
 export class FormValidator {
     constructor(config, formElement) {
@@ -64,4 +65,3 @@ export class FormValidator {
         this._toggleButtonState();
     }
 }
-//# sourceMappingURL=FormValidator.js.map

@@ -17,10 +17,12 @@ export class Popup {
     //-Añade la clase CSS que muestra la ventana.
     open() {
         this._popup.classList.add("popup_is-opened");
+        document.addEventListener("keydown", this.handleEscClose);
     }
     //-Elimina esa clase y la oculta.
     close() {
         this._popup.classList.remove("popup_is-opened");
+        document.removeEventListener("keydown", this.handleEscClose);
     }
     /*setEventListeners(): conecta los eventos de cierre.*/
     setEventListeners() {
@@ -33,7 +35,5 @@ export class Popup {
                 this.close();
             }
         });
-        document.addEventListener("keydown", this.handleEscClose);
     }
 }
-//# sourceMappingURL=Popup.js.map

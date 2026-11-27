@@ -24,4 +24,3 @@ export class UserInfo {
         this._avatarElement.src = data.avatar;
     }
 }
-//# sourceMappingURL=UserInfo.js.map
