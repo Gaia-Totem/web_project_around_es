@@ -5,22 +5,25 @@ export interface CardData {
   _id: string;
   isLiked: boolean;
 }
-//Crea las tarjetas.
+
+// Crea las tarjetas.
 export class Card {
   private _data: CardData;
   private _selector: string;
-  private _handleCardClick: (name: string, link: string) => void; //configura el botón de «abrir imagen»
+  private _handleCardClick: (name: string, link: string) => void;
   private _element: HTMLLIElement;
-  private _handleLikeClick: (cardId: string, isLiked: boolean) => Promise<void>; //configura el botón de «Me gusta»
-  private _handleDeleteClick: (card: Card, cardId: string) => void; //configura el botón de «eliminar»
-
+  private _handleLikeClick: (
+    cardId: string,
+    isLiked: boolean
+  ) => Promise<void>;
+  private _handleDeleteClick: (card: Card, cardId: string) => void;
 
   constructor(
     data: CardData,
     selector: string,
     handleCardClick: (name: string, link: string) => void,
     handleLikeClick: (cardId: string, isLiked: boolean) => Promise<void>,
-    handleDeleteClick: (card: Card, cardId: string) => void,
+    handleDeleteClick: (card: Card, cardId: string) => void
   ) {
     this._data = data;
     this._selector = selector;
@@ -36,7 +39,8 @@ export class Card {
       throw new Error(`No se encontró la plantilla: ${this._selector}`);
     }
 
-    const cardElement = template.content.querySelector<HTMLLIElement>(".card");
+    const cardElement =
+      template.content.querySelector<HTMLLIElement>(".card");
 
     if (!cardElement) {
       throw new Error("No se encontró la tarjeta dentro de la plantilla");
@@ -47,33 +51,32 @@ export class Card {
     this._setCardData();
     this._setEventListeners();
   }
-/*_setCardData() tiene la responsabilidad de configurar los datos iniciales de la tarjeta.
-Ahora hace tres cosas: */
-private _setCardData(): void {
-  const titleElement = //1. Coloca el nombre de la tarjeta.
-    this._element.querySelector<HTMLElement>(".card__title");
 
-  const imageElement = //2. Coloca la imagen y su texto alternativo.
-    this._element.querySelector<HTMLImageElement>(".card__image");
+  private _setCardData(): void {
+    const titleElement =
+      this._element.querySelector<HTMLElement>(".card__title");
 
-  const likeButton = //3. Configura el corazón según el valor inicial de isLiked.
-    this._element.querySelector<HTMLButtonElement>(
-      ".card__like-button"
+    const imageElement =
+      this._element.querySelector<HTMLImageElement>(".card__image");
+
+    const likeButton =
+      this._element.querySelector<HTMLButtonElement>(
+        ".card__like-button"
+      );
+
+    if (!titleElement || !imageElement) {
+      throw new Error("Faltan elementos dentro de la tarjeta");
+    }
+
+    titleElement.textContent = this._data.name;
+    imageElement.src = this._data.link;
+    imageElement.alt = this._data.name;
+
+    likeButton?.classList.toggle(
+      "card__like-button_is-active",
+      this._data.isLiked
     );
-
-  if (!titleElement || !imageElement) {
-    throw new Error("Faltan elementos dentro de la tarjeta");
   }
-
-  titleElement.textContent = this._data.name;
-  imageElement.src = this._data.link;
-  imageElement.alt = this._data.name;
-
-  likeButton?.classList.toggle(
-    "card__like-button_is-active",
-    this._data.isLiked
-  );
-}
 
   private _setEventListeners(): void {
     const imageElement =
@@ -93,26 +96,32 @@ private _setCardData(): void {
       this._handleCardClick(this._data.name, this._data.link);
     });
 
-   likeButton?.addEventListener("click", () => {
-  const newIsLiked = !this._data.isLiked;
+    likeButton?.addEventListener("click", async () => {
+      const newIsLiked = !this._data.isLiked;
 
-  this._handleLikeClick(this._data._id, newIsLiked)
-    .then(() => {
-      this._data.isLiked = newIsLiked;
+      likeButton.disabled = true;
 
-      likeButton.classList.toggle(
-        "card__like-button_is-active",
-        newIsLiked
-      );
-    })
-    .catch((err) => {
-      console.error("Error al cambiar el like:", err);
+      try {
+        await this._handleLikeClick(this._data._id, newIsLiked);
+
+        this._data.isLiked = newIsLiked;
+
+        likeButton.classList.toggle(
+          "card__like-button_is-active",
+          newIsLiked
+        );
+
+      } catch (err) {
+        console.error("Error al cambiar el like:", err);
+
+      } finally {
+        likeButton.disabled = false;
+      }
     });
-});
 
-deleteButton?.addEventListener("click", () => {
-  this._handleDeleteClick(this, this._data._id);
-});
+    deleteButton?.addEventListener("click", () => {
+      this._handleDeleteClick(this, this._data._id);
+    });
   }
 
   public generateCard(): HTMLLIElement {
@@ -120,8 +129,8 @@ deleteButton?.addEventListener("click", () => {
   }
 
   public deleteCard(): void {
-  this._element.remove();
+    this._element.remove();
+  }
 }
 
-}
 export type NewCardData = Pick<CardData, "name" | "link">;

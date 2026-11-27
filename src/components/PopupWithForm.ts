@@ -3,7 +3,7 @@ import { Popup } from "./Popup.js";
 /* Datos, envío y reinicio del formulario */
 export type FormSubmitCallback = (
   inputValues: Record<string, string>
-) => void;
+) => Promise<void>;
 
 export class PopupWithForm extends Popup {
   private _form: HTMLFormElement;
@@ -25,7 +25,6 @@ export class PopupWithForm extends Popup {
     this._handleFormSubmit = handleFormSubmit;
   }
 
-  
   private getInputValues(): Record<string, string> {
     const inputList =
       this._form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
@@ -44,10 +43,14 @@ export class PopupWithForm extends Popup {
   public setEventListeners(): void {
     super.setEventListeners();
 
-    this._form.addEventListener("submit", (event: SubmitEvent) => {
+    this._form.addEventListener("submit", async (event: SubmitEvent) => {
       event.preventDefault();
 
-      this._handleFormSubmit(this.getInputValues());
+      try {
+        await this._handleFormSubmit(this.getInputValues());
+      } catch (err) {
+        console.error("Error al procesar el formulario:", err);
+      }
     });
   }
 
@@ -56,3 +59,4 @@ export class PopupWithForm extends Popup {
     super.close();
   }
 }
+
