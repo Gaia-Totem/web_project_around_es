@@ -13,7 +13,7 @@ export class Card {
   private _element: HTMLLIElement;
   private _handleLikeClick: (cardId: string, isLiked: boolean) => Promise<void>; //configura el botón de «Me gusta»
   private _handleDeleteClick: (card: Card, cardId: string) => void; //configura el botón de «eliminar»
-  private _element: HTMLLIElement;
+
 
   constructor(
     data: CardData,

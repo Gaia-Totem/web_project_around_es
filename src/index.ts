@@ -77,7 +77,7 @@ const profileValidator = new FormValidator(
 );
 profileValidator.enableValidation();
 
-// 6. Validación del formulario de nuevas tarjetas.
+// - Validación del formulario de nuevas tarjetas.
 const newCardFormElement =
   document.querySelector<HTMLFormElement>("#new-card-form");
 if (!newCardFormElement) {
@@ -88,6 +88,21 @@ const newCardValidator = new FormValidator(
   newCardFormElement
 );
 newCardValidator.enableValidation();
+
+// Validación del formulario del avatar.
+const avatarFormElement =
+  document.querySelector<HTMLFormElement>("#avatar-form");
+
+if (!avatarFormElement) {
+  throw new Error("No se encontró el formulario del avatar");
+}
+
+const avatarValidator = new FormValidator(
+  defaultFormConfig,
+  avatarFormElement
+);
+
+avatarValidator.enableValidation();
 
 // -Popup para editar el perfil.
 const profilePopup = new PopupWithForm(
@@ -313,6 +328,7 @@ const avatarEditButton = document.querySelector(
 );
 
 avatarEditButton?.addEventListener("click", () => {
+   avatarValidator.resetValidation();
   popupWithAvatar.open();
 });
 
