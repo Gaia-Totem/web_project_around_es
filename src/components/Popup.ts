@@ -14,11 +14,13 @@ export class Popup {
 //-Añade la clase CSS que muestra la ventana.
   public open(): void {
     this._popup.classList.add("popup_is-opened");
+    document.addEventListener("keydown", this.handleEscClose);
   }
 
 //-Elimina esa clase y la oculta.
   public close(): void {
     this._popup.classList.remove("popup_is-opened");
+    document.removeEventListener("keydown", this.handleEscClose);
   }
 
   // handleEscClose(): comprueba si se pulsó Escape y cierra. 
@@ -44,7 +46,5 @@ export class Popup {
         this.close();
       }
     });
-
-    document.addEventListener("keydown", this.handleEscClose);
   }
 }
